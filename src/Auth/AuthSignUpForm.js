@@ -65,6 +65,7 @@ const AuthSignUpForm = () => {
       const data = await response.json();
       setIsLoading(false);
       console.log(data);
+      localStorage.setItem("idtoken", data.idToken);
       navigate("/", { replace: true });
       //   console.log(data.idToken);
       //   authCxt.login(data.idToken, emailInput.current.value);
@@ -88,26 +89,30 @@ const AuthSignUpForm = () => {
           </Typography>
         </Grid>
         <form onSubmit={submitHandler}>
-          <TextField
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            required
-            id="outlined-required text"
-            label="Name"
-            variant="standard"
-            fullWidth
-          />
-          <TextField
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            required
-            id="outlined-required email"
-            type="email"
-            label="Email"
-            variant="standard"
-            fullWidth
-            inputProps={{ inputMode: "email" }}
-          />
+          <FormControl variant="standard" required fullWidth>
+            <TextField
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              required
+              id="outlined-required text"
+              label="Name"
+              variant="standard"
+              fullWidth
+            />
+          </FormControl>
+          <FormControl variant="standard" required fullWidth>
+            <TextField
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              required
+              id="outlined-required email"
+              type="email"
+              label="Email"
+              variant="standard"
+              fullWidth
+              inputProps={{ inputMode: "email" }}
+            />
+          </FormControl>
           <FormControl variant="standard" required fullWidth>
             <InputLabel htmlFor="standard-adornment-password">
               Password

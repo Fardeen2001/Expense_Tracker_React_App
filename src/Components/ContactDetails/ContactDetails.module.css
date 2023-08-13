@@ -1,0 +1,29 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100vw;
+  border-bottom: 2px solid black;
+  padding: 10px;
+}
+.badge {
+  background-color: bisque;
+  border-radius: 10px;
+  width: 30%;
+  padding: 7px;
+}
+.contact {
+  margin: 30px auto;
+  width: 60vw;
+  border-bottom: 2px solid black;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.form {
+  margin: 0 100px;
+}
+.updatebtn {
+  margin: 20px 0 30px 30px !important;
+}
