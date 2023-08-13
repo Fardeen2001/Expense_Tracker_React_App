@@ -12,6 +12,17 @@
 .button {
   margin: 20px !important;
 }
+.action {
+  display: flex !important;
+  flex-direction: column;
+}
+.toggle {
+  background-color: white;
+  color: black;
+  border-radius: 0;
+  border: 0;
+  cursor: pointer;
+}
 @media screen and (max-width: 800px) {
   .paper {
     width: 70vw;

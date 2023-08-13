@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import classes from "./AuthSignupForm.module.css";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
@@ -10,6 +10,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { AddCircleOutlineOutlined } from "@mui/icons-material";
 import { Avatar, Button, Grid, Paper, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const AuthSignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,6 +20,7 @@ const AuthSignUpForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
@@ -35,41 +37,37 @@ const AuthSignUpForm = () => {
       return;
     }
 
-    // let url;
+    let url;
 
-    // if (isLogin) {
-    //   url =
-    //     "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E";
-    // } else {
-    //   url =
-    //     "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E";
-    // }
+    if (isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E";
+    } else {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E";
+    }
 
     try {
-      const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) {
         throw new Error("Invalid Email or password");
       }
       const data = await response.json();
       setIsLoading(false);
       console.log(data);
+      navigate("/", { replace: true });
       //   console.log(data.idToken);
       //   authCxt.login(data.idToken, emailInput.current.value);
-
-      //   navigate("/Store", { replace: true });
     } catch (error) {
       alert(error.message);
     }
@@ -81,9 +79,12 @@ const AuthSignUpForm = () => {
           <Avatar className={classes.avatar}>
             <AddCircleOutlineOutlined />
           </Avatar>
-          <h2 className={classes.header}>Sign Up</h2>
+          <h1 className={classes.header}>{isLogin ? "LOGIN" : "SIGNUP"}</h1>
+
           <Typography variant="caption">
-            Please Fill This Form To Create An Account!
+            {!isLogin
+              ? "Please Fill This Form To Create An Account!"
+              : "Please Fill This Form To Enter Into Your Account!"}
           </Typography>
         </Grid>
         <form onSubmit={submitHandler}>
@@ -153,9 +154,25 @@ const AuthSignUpForm = () => {
               }
             />
           </FormControl>
-          <Button type="submit" variant="contained" className={classes.button}>
-            Sign Up
-          </Button>
+          <div className={classes.action}>
+            {!isLoading && (
+              <Button
+                type="submit"
+                variant="contained"
+                className={classes.button}
+              >
+                {!isLogin ? "Sign Up" : "Log In"}
+              </Button>
+            )}
+            {isLoading && <p>Sending request..</p>}
+            <button
+              type="button"
+              className={classes.toggle}
+              onClick={switchAuthModeHandler}
+            >
+              {isLogin ? "Create new account" : "Login with existing account"}
+            </button>
+          </div>
         </form>
       </Paper>
     </Grid>
