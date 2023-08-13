@@ -1,12 +1,51 @@
 import { AccountCircle } from "@mui/icons-material";
 import { Box, Button, FormControl, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./ContactDetails.module.css";
 import { NavLink } from "react-router-dom";
 
 const ContactDetails = () => {
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              idToken: localStorage.getItem("idtoken"),
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!res.ok) {
+          throw new Error("error");
+        }
+        const data = await res.json();
+        console.log(data);
+      } catch (error) {
+        alert(error.message);
+      }
+      try {
+        const response = await fetch(
+          "https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData.json"
+        );
+
+        if (!response.ok) {
+          throw new Error("Something went wrong ....Retrying");
+        }
+        const data = await response.json();
+        setName(data.displayName);
+        setUrl(data.photoUrl);
+      } catch (error) {}
+    };
+    getUser();
+  }, []);
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -33,6 +72,23 @@ const ContactDetails = () => {
     } catch (error) {
       alert(error.message);
     }
+    try {
+      const response = fetch(
+        "https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData.json",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            displayName: name,
+            photoUrl: url,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {}
   };
   return (
     <>

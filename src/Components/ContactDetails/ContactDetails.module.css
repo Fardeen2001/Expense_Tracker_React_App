@@ -27,3 +27,14 @@
 .updatebtn {
   margin: 20px 0 30px 30px !important;
 }
+@media screen and (max-width: 678px) {
+  .nav {
+    flex-direction: column;
+  }
+  .badge {
+    width: 70vw;
+  }
+  .form {
+    margin: 0;
+  }
+}
