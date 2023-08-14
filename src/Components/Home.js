@@ -32,8 +32,10 @@ const Home = () => {
         throw new Error("invalid");
       }
       const data = await response.json();
+      const email = authCxt.email;
+      const editedEmail = email.replace(/[@.]/g, "");
       const res = await fetch(
-        "https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified.json",
+        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified${editedEmail}.json`,
         {
           method: "POST",
           body: JSON.stringify({

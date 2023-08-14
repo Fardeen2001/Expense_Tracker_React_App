@@ -67,7 +67,7 @@ const AuthSignUpForm = () => {
       const data = await response.json();
       setIsLoading(false);
       //console.log(data);
-      authCxt.login(data.idToken);
+      authCxt.login(data.idToken, email);
       navigate("/", { replace: true });
       //   console.log(data.idToken);
       //   authCxt.login(data.idToken, emailInput.current.value);
@@ -75,6 +75,10 @@ const AuthSignUpForm = () => {
       setIsLoading(false);
       alert(error.message);
     }
+  };
+  const forgotPasswordHandler = (e) => {
+    e.preventDefault();
+    navigate("/forgot", { replace: true });
   };
   return (
     <Grid>
@@ -173,6 +177,13 @@ const AuthSignUpForm = () => {
               </Button>
             )}
             {isLoading && <p>Sending request..</p>}
+            <button
+              type="submit"
+              className={classes.forgot}
+              onClick={forgotPasswordHandler}
+            >
+              Forgot Password?
+            </button>
             <button
               type="button"
               className={classes.toggle}

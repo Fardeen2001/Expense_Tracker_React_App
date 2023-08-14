@@ -2,9 +2,10 @@ import React, { createContext, useEffect, useState } from "react";
 
 const AuthContext = createContext({
   token: "",
+  email: "",
   isLoggedIn: false,
   isEmailVerified: false,
-  login: (token) => {},
+  login: (token, email) => {},
   logout: () => {},
 });
 
@@ -12,11 +13,13 @@ export const AuthContextProvider = (props) => {
   const initialtoken = localStorage.getItem("idtoken");
   const [token, setToken] = useState(initialtoken);
   const [verify, setVerify] = useState(false);
+  const [email, setEmail] = useState("");
   useEffect(() => {
     const EmailVerifyHandler = async () => {
       try {
+        const editedEmail = email.replace(/[@.]/g, "");
         const res = await fetch(
-          "https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified.json"
+          `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified${editedEmail}.json`
         );
         if (!res.ok) {
           throw new Error("email is not verified");
@@ -29,20 +32,23 @@ export const AuthContextProvider = (props) => {
       }
     };
     EmailVerifyHandler();
-  }, []);
+  }, [email]);
   console.log("ver", verify);
 
   const userIsLoggedin = !!token;
-  const loginHandler = (token) => {
+  const loginHandler = (token, email) => {
     localStorage.setItem("idtoken", token);
     setToken(token);
+    setEmail(email);
   };
   const logoutHandler = () => {
     localStorage.removeItem("idtoken");
     setToken(null);
+    setEmail("");
   };
   const contextValues = {
     token: token,
+    email: email,
     isLoggedIn: userIsLoggedin,
     isEmailVerified: verify,
     login: loginHandler,

@@ -10,18 +10,22 @@
   background-color: #00ff9d !important;
 }
 .button {
-  margin: 20px !important;
+  margin: 20px 20px 5px 20px !important;
 }
 .action {
   display: flex !important;
   flex-direction: column;
 }
-.toggle {
+.toggle,
+.forgot {
   background-color: white;
   color: black;
   border-radius: 0;
   border: 0;
   cursor: pointer;
+}
+.forgot {
+  margin-bottom: 10px;
 }
 @media screen and (max-width: 800px) {
   .paper {
