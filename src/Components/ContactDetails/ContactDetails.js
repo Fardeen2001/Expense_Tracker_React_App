@@ -26,7 +26,9 @@ const ContactDetails = () => {
           throw new Error("error");
         }
         const data = await res.json();
-        console.log(data);
+        //console.log(data, data.users[0].displayName, data.users[0].photoUrl);
+        setName(data.users[0].displayName);
+        setUrl(data.users[0].photoUrl);
       } catch (error) {
         alert(error.message);
       }
@@ -39,8 +41,6 @@ const ContactDetails = () => {
           throw new Error("Something went wrong ....Retrying");
         }
         const data = await response.json();
-        setName(data.displayName);
-        setUrl(data.photoUrl);
       } catch (error) {}
     };
     getUser();
@@ -68,7 +68,7 @@ const ContactDetails = () => {
         throw new Error("error");
       }
       const data = await res.json();
-      console.log(data);
+      //console.log(data);
     } catch (error) {
       alert(error.message);
     }
@@ -87,7 +87,7 @@ const ContactDetails = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
     } catch (error) {}
   };
   return (

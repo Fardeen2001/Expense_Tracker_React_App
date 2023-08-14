@@ -70,6 +70,7 @@ const AuthSignUpForm = () => {
       //   console.log(data.idToken);
       //   authCxt.login(data.idToken, emailInput.current.value);
     } catch (error) {
+      setIsLoading(false);
       alert(error.message);
     }
   };
