@@ -1,9 +1,17 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import classes from "./Home.module.css";
 import { Button } from "@mui/material";
+import AuthContext from "../Context/authContext";
 
 const Home = () => {
+  const authCxt = useContext(AuthContext);
+  const navigate = useNavigate();
+  const logoutHandler = (e) => {
+    e.preventDefault();
+    authCxt.logout();
+    navigate("/auth", { replace: true });
+  };
   const verifyHandler = async (e) => {
     e.preventDefault();
     try {
@@ -13,7 +21,7 @@ const Home = () => {
           method: "POST",
           body: JSON.stringify({
             requestType: "VERIFY_EMAIL",
-            idToken: localStorage.getItem("idtoken"),
+            idToken: authCxt.token,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -24,7 +32,24 @@ const Home = () => {
         throw new Error("invalid");
       }
       const data = await response.json();
-      console.log(data);
+      const res = await fetch(
+        "https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified.json",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: data.email,
+            kind: data.kind,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!res.ok) {
+        throw new Error("invalid");
+      }
+      const dt = await res.json();
+      console.log("dt", dt);
     } catch (error) {
       alert(error.message);
     }
@@ -32,9 +57,16 @@ const Home = () => {
   return (
     <nav className={classes.nav}>
       <h4>Welcome To Expense Tracker</h4>
+      {!authCxt.isEmailVerified && (
+        <div>
+          <Button variant="outlined" onClick={verifyHandler}>
+            Verify Your Email
+          </Button>
+        </div>
+      )}
       <div>
-        <Button variant="outlined" onClick={verifyHandler}>
-          Verify Your Email
+        <Button variant="outlined" onClick={logoutHandler}>
+          logout
         </Button>
       </div>
       <div className={classes.badge}>
