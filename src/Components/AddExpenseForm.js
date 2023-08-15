@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import classes from "./AddExpenseForm.module.css";
 import AuthContext from "../Context/authContext";
 
@@ -22,6 +22,14 @@ const AddExpenseForm = (props) => {
   const [Category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const { email } = useContext(AuthContext);
+  useEffect(() => {
+    if (props.editExpense) {
+      setPrice(props.editExpense.price.toString());
+      setDescription(props.editExpense.description);
+      setCategory(props.editExpense.category);
+      setDate(props.editExpense.date);
+    }
+  }, [props.editExpense]);
   const priceHandleChange = (event) => {
     setPrice(event.target.value);
   };
@@ -34,6 +42,7 @@ const AddExpenseForm = (props) => {
   const dateHandelChange = (event) => {
     setDate(event.target.value);
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     if (
@@ -52,7 +61,7 @@ const AddExpenseForm = (props) => {
       category: Category,
       date: date,
     };
-    props.onSubmit(data);
+
     try {
       const editedEmail = email.replace(/[@.]/g, "");
       const res = await fetch(
@@ -70,13 +79,14 @@ const AddExpenseForm = (props) => {
       if (!res.ok) {
         throw new Error("invalid");
       }
-      await res.json();
+      const dt = await res.json();
+      const newData = { ...data, firebaseId: dt.name };
+      props.onSubmit(newData);
     } catch (error) {
       alert(error.message);
     }
     setPrice("");
     setDescription("");
-    setCategory("None");
   };
 
   return (

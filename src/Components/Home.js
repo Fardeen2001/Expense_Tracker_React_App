@@ -6,10 +6,11 @@ import AuthContext from "../Context/authContext";
 import AddExpenseForm from "./AddExpenseForm";
 import ExpenseTrackerList from "./ExpenseTrackerList";
 
-const Home = () => {
+const Home = (props) => {
   const { email, logout, token, isEmailVerified } = useContext(AuthContext);
   const navigate = useNavigate();
   const [addExpense, setAddexpense] = useState([]);
+  const [editingExpense, setEditingExpense] = useState(null);
   const logoutHandler = (e) => {
     e.preventDefault();
     logout();
@@ -70,8 +71,15 @@ const Home = () => {
         throw new Error("invalid");
       }
       const data = await res.json();
+      // console.log("fetch", Object.keys(data));
+
       if (data && typeof data === "object") {
-        setAddexpense(Object.values(data));
+        const fetchedExpenses = Object.keys(data).map((firebaseId) => {
+          const expense = data[firebaseId];
+          return { ...expense, firebaseId };
+        });
+
+        setAddexpense(fetchedExpenses);
       }
     } catch (error) {
       alert(error.message);
@@ -85,7 +93,40 @@ const Home = () => {
   const onSubmitHandler = (data) => {
     setAddexpense([...addExpense, data]);
   };
-
+  const deleteHandler = async (firebaseId) => {
+    try {
+      const editedEmail = email.replace(/[@.]/g, "");
+      const res = await fetch(
+        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}/${firebaseId}.json`,
+        {
+          method: "DELETE",
+        }
+        //https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseDatafardeenahamed2001gmailcom/-Nbu2CQ8xlVEcOe-nzih
+      );
+      if (!res.ok) {
+        throw new Error("invalid deletion");
+      }
+      await res.json();
+      const newExpenses = addExpense.filter(
+        (item) => item.firebaseId !== firebaseId
+      );
+      setAddexpense(newExpenses);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  const editHandler = (item) => {
+    setEditingExpense(item);
+  };
+  const updateExpenseHandler = (updatedExpense) => {
+    const updatedExpenses = addExpense.map((expense) =>
+      expense.firebaseId === updatedExpense.firebaseId
+        ? updatedExpense
+        : expense
+    );
+    setAddexpense(updatedExpenses);
+    setEditingExpense(null); // Clear the editingExpense after update
+  };
   return (
     <>
       <nav className={classes.nav}>
@@ -115,13 +156,23 @@ const Home = () => {
           </div>
         </div>
       </nav>
-      <AddExpenseForm onSubmit={onSubmitHandler} />
+      <AddExpenseForm
+        onSubmit={onSubmitHandler}
+        editExpense={editingExpense}
+        onUpdate={updateExpenseHandler}
+      />
       {!addExpense.length > 0 && (
         <h3 style={{ textAlign: "center", marginTop: "15%" }}>
           Nothing, Please Add Something!
         </h3>
       )}
-      {addExpense.length > 0 && <ExpenseTrackerList addExpense={addExpense} />}
+      {addExpense.length > 0 && (
+        <ExpenseTrackerList
+          addExpense={addExpense}
+          deleteHandler={deleteHandler}
+          editHandler={editHandler}
+        />
+      )}
     </>
   );
 };

@@ -7,6 +7,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Paper,
+  Tooltip,
 } from "@mui/material";
 import classes from "./ExpenseTrackerList.module.css";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
@@ -14,6 +15,7 @@ import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import React from "react";
 const CategoryIcons = {
   Food: <FastfoodIcon />,
@@ -36,9 +38,26 @@ const ExpenseTrackerList = (props) => {
                 secondary={item.description}
               />
               <ListItemText primary={item.category} secondary={item.date} />
-              <IconButton aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
+              <Tooltip title="Edit" placement="top">
+                <IconButton
+                  aria-label="Edit"
+                  onClick={() => {
+                    props.editHandler(item);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete" placement="top">
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => {
+                    props.deleteHandler(item.firebaseId);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
             </ListItem>
           ))}
         </List>
