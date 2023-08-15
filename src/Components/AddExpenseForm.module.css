@@ -8,3 +8,12 @@
   place-items: center;
   padding: 20px;
 }
+@media screen and (max-width: 678px) {
+  .grid {
+    width: 70vw;
+    margin: 10px auto;
+  }
+  .header {
+    font-size: 20px;
+  }
+}

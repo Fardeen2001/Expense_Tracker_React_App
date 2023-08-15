@@ -40,7 +40,7 @@ const ContactDetails = () => {
         if (!response.ok) {
           throw new Error("Something went wrong ....Retrying");
         }
-        const data = await response.json();
+        await response.json();
       } catch (error) {}
     };
     getUser();
@@ -67,7 +67,7 @@ const ContactDetails = () => {
       if (!res.ok) {
         throw new Error("error");
       }
-      const data = await res.json();
+      await res.json();
       //console.log(data);
     } catch (error) {
       alert(error.message);
@@ -86,7 +86,7 @@ const ContactDetails = () => {
           },
         }
       );
-      const data = await response.json();
+      await response.json();
       //console.log(data);
     } catch (error) {}
   };

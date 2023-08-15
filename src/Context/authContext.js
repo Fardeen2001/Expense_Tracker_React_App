@@ -11,9 +11,10 @@ const AuthContext = createContext({
 
 export const AuthContextProvider = (props) => {
   const initialtoken = localStorage.getItem("idtoken");
+  const initialEmail = localStorage.getItem("email") || "";
   const [token, setToken] = useState(initialtoken);
   const [verify, setVerify] = useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail);
   useEffect(() => {
     const EmailVerifyHandler = async () => {
       try {
@@ -38,11 +39,13 @@ export const AuthContextProvider = (props) => {
   const userIsLoggedin = !!token;
   const loginHandler = (token, email) => {
     localStorage.setItem("idtoken", token);
+    localStorage.setItem("email", email);
     setToken(token);
     setEmail(email);
   };
   const logoutHandler = () => {
     localStorage.removeItem("idtoken");
+    localStorage.removeItem("email");
     setToken(null);
     setEmail("");
   };

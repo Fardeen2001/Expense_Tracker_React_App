@@ -14,7 +14,7 @@ function App() {
         <Route
           exact
           path="/"
-          element={authCxt.isLoggedIn ? <Home /> : <Navigate to="/auth" />}
+          element={!authCxt.isLoggedIn ? <Navigate to="/auth" /> : <Home />}
         />
         <Route exact path="/auth" element={<AuthSignUpForm />} />
         <Route exact path="/forgot" element={<ForgotPassword />} />

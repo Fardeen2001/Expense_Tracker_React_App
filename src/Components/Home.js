@@ -1,16 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import classes from "./Home.module.css";
 import { Button } from "@mui/material";
 import AuthContext from "../Context/authContext";
 import AddExpenseForm from "./AddExpenseForm";
+import ExpenseTrackerList from "./ExpenseTrackerList";
 
 const Home = () => {
-  const authCxt = useContext(AuthContext);
+  const { email, logout, token, isEmailVerified } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [addExpense, setAddexpense] = useState([]);
   const logoutHandler = (e) => {
     e.preventDefault();
-    authCxt.logout();
+    logout();
     navigate("/auth", { replace: true });
   };
   const verifyHandler = async (e) => {
@@ -22,7 +24,7 @@ const Home = () => {
           method: "POST",
           body: JSON.stringify({
             requestType: "VERIFY_EMAIL",
-            idToken: authCxt.token,
+            idToken: token,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -33,7 +35,7 @@ const Home = () => {
         throw new Error("invalid");
       }
       const data = await response.json();
-      const email = authCxt.email;
+
       const editedEmail = email.replace(/[@.]/g, "");
       const res = await fetch(
         `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified${editedEmail}.json`,
@@ -57,12 +59,39 @@ const Home = () => {
       alert(error.message);
     }
   };
+
+  const fetcher = async () => {
+    try {
+      const editedEmail = email.replace(/[@.]/g, "");
+      const res = await fetch(
+        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}.json`
+      );
+      if (!res.ok) {
+        throw new Error("invalid");
+      }
+      const data = await res.json();
+      if (data && typeof data === "object") {
+        setAddexpense(Object.values(data));
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  useEffect(() => {
+    fetcher();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSubmitHandler = (data) => {
+    setAddexpense([...addExpense, data]);
+  };
+
   return (
     <>
       <nav className={classes.nav}>
         <div>
           <h4>Welcome To Expense Tracker</h4>
-          {!authCxt.isEmailVerified && (
+          {!isEmailVerified && (
             <div>
               <Button variant="outlined" onClick={verifyHandler}>
                 Verify Your Email
@@ -86,7 +115,13 @@ const Home = () => {
           </div>
         </div>
       </nav>
-      <AddExpenseForm />
+      <AddExpenseForm onSubmit={onSubmitHandler} />
+      {!addExpense.length > 0 && (
+        <h3 style={{ textAlign: "center", marginTop: "15%" }}>
+          Nothing, Please Add Something!
+        </h3>
+      )}
+      {addExpense.length > 0 && <ExpenseTrackerList addExpense={addExpense} />}
     </>
   );
 };
