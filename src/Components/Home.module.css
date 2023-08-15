@@ -11,4 +11,17 @@
   border-radius: 10px;
   width: auto;
   padding: 7px;
+  margin-left: 20px;
+}
+.side {
+  display: flex;
+}
+@media screen and (max-width: 678px) {
+  .side {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .badge {
+    margin-top: 10px;
+  }
 }

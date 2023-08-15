@@ -1,0 +1,10 @@
+.grid {
+  max-height: 40vh;
+  width: 40vw;
+  margin: 20px auto;
+}
+.paper {
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}

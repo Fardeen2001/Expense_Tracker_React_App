@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import classes from "./Home.module.css";
 import { Button } from "@mui/material";
 import AuthContext from "../Context/authContext";
+import AddExpenseForm from "./AddExpenseForm";
 
 const Home = () => {
   const authCxt = useContext(AuthContext);
@@ -57,24 +58,36 @@ const Home = () => {
     }
   };
   return (
-    <nav className={classes.nav}>
-      <h4>Welcome To Expense Tracker</h4>
-      {!authCxt.isEmailVerified && (
+    <>
+      <nav className={classes.nav}>
         <div>
-          <Button variant="outlined" onClick={verifyHandler}>
-            Verify Your Email
-          </Button>
+          <h4>Welcome To Expense Tracker</h4>
+          {!authCxt.isEmailVerified && (
+            <div>
+              <Button variant="outlined" onClick={verifyHandler}>
+                Verify Your Email
+              </Button>
+            </div>
+          )}
         </div>
-      )}
-      <div>
-        <Button variant="outlined" onClick={logoutHandler}>
-          logout
-        </Button>
-      </div>
-      <div className={classes.badge}>
-        Your profile is incomplete <NavLink to="/profile">Complete Now</NavLink>
-      </div>
-    </nav>
+        <div className={classes.side}>
+          <div>
+            <Button
+              variant="outlined"
+              className={classes.logout}
+              onClick={logoutHandler}
+            >
+              logout
+            </Button>
+          </div>
+          <div className={classes.badge}>
+            Your profile is incomplete{" "}
+            <NavLink to="/profile">Complete Now</NavLink>
+          </div>
+        </div>
+      </nav>
+      <AddExpenseForm />
+    </>
   );
 };
 

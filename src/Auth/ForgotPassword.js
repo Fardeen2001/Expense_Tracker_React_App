@@ -37,7 +37,7 @@ const ForgotPassword = () => {
       if (!res.ok) {
         throw new Error("invalid Retry");
       }
-      const data = await res.json();
+      await res.json();
       setIsLoading(false);
       navigate("/auth", { replace: true });
     } catch (error) {
