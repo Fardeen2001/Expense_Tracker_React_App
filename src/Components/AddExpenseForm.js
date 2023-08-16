@@ -45,48 +45,83 @@ const AddExpenseForm = (props) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (
-      price.trim === "" ||
-      description.trim === "" ||
-      description.length < 3 ||
-      Category === "None"
-    ) {
-      alert("Please enter a valid data");
-      return;
-    }
-    const data = {
-      id: Math.random().toString(),
-      price: +price,
-      description: description,
-      category: Category,
-      date: date,
-    };
 
-    try {
-      const editedEmail = email.replace(/[@.]/g, "");
-      const res = await fetch(
-        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}.json`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...data,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
+    if (props.editExpense) {
+      const updatedExpense = {
+        ...props.editExpense,
+        price: +price,
+        description,
+        category: Category,
+        date,
+      };
+      try {
+        const editedEmail = email.replace(/[@.]/g, "");
+        const response = await fetch(
+          `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}/${props.editExpense.firebaseId}.json`,
+          {
+            method: "PUT",
+            body: JSON.stringify(updatedExpense),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("invalid editing details");
         }
-      );
-      if (!res.ok) {
-        throw new Error("invalid");
+        const dt = await response.json();
+        const newData = { ...updatedExpense, firebaseId: dt.name };
+        props.onSubmit(newData);
+      } catch (error) {
+        alert(error.message);
       }
-      const dt = await res.json();
-      const newData = { ...data, firebaseId: dt.name };
-      props.onSubmit(newData);
-    } catch (error) {
-      alert(error.message);
+    } else {
+      if (
+        price.trim === "" ||
+        description.trim === "" ||
+        description.length < 3 ||
+        Category === "None"
+      ) {
+        alert("Please enter a valid data");
+        return;
+      }
+      const data = {
+        id: Math.random().toString(),
+        price: +price,
+        description: description,
+        category: Category,
+        date: date,
+      };
+
+      try {
+        const editedEmail = email.replace(/[@.]/g, "");
+        const res = await fetch(
+          `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}.json`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              ...data,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!res.ok) {
+          throw new Error("invalid");
+        }
+        const dt = await res.json();
+        const newData = { ...data, firebaseId: dt.name };
+        props.onSubmit(newData);
+      } catch (error) {
+        alert(error.message);
+      }
     }
+
     setPrice("");
     setDescription("");
+    setDate("");
+    setCategory(null);
   };
 
   return (

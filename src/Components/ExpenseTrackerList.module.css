@@ -14,3 +14,24 @@
 .listitems {
   border-bottom: 2px solid black;
 }
+@media screen and (max-width: 678px) {
+  .grid {
+    width: 100%;
+    margin: 100px auto;
+  }
+  .paper {
+    padding: 10px;
+  }
+}
+@media screen and (max-width: 320px) {
+  .grid {
+    width: 100%;
+    margin: 150px auto;
+  }
+  .paper {
+    padding: 0;
+  }
+  .avatar {
+    display: none;
+  }
+}

@@ -81,7 +81,7 @@ const AuthSignUpForm = () => {
     navigate("/forgot", { replace: true });
   };
   return (
-    <Grid>
+    <Grid className={classes.grid}>
       <Paper elevation={20} className={classes.paper}>
         <Grid align="center">
           <Avatar className={classes.avatar}>

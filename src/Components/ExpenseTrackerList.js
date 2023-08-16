@@ -30,7 +30,7 @@ const ExpenseTrackerList = (props) => {
         <List className={classes.list}>
           {props.addExpense.map((item) => (
             <ListItem key={item.id} className={classes.listitems}>
-              <ListItemAvatar>
+              <ListItemAvatar className={classes.avatar}>
                 <Avatar>{CategoryIcons[item.category]}</Avatar>
               </ListItemAvatar>
               <ListItemText

@@ -1,7 +1,7 @@
 .paper {
   padding: 30px 60px;
   width: 40vw;
-  margin: 20px auto;
+  margin: 100px auto;
 }
 .header {
   margin: 10px;
@@ -30,6 +30,12 @@
 @media screen and (max-width: 800px) {
   .paper {
     width: 70vw;
+    padding: 30px;
+  }
+}
+@media screen and (max-width: 400px) {
+  .paper {
+    width: 100%;
     padding: 30px;
   }
 }

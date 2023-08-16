@@ -116,6 +116,10 @@ const Home = (props) => {
     }
   };
   const editHandler = (item) => {
+    const editingNewExpense = addExpense.filter(
+      (items) => items.firebaseId !== item.firebaseId
+    );
+    setAddexpense(editingNewExpense);
     setEditingExpense(item);
   };
   const updateExpenseHandler = (updatedExpense) => {
@@ -124,9 +128,11 @@ const Home = (props) => {
         ? updatedExpense
         : expense
     );
+
     setAddexpense(updatedExpenses);
-    setEditingExpense(null); // Clear the editingExpense after update
+    setEditingExpense(null);
   };
+
   return (
     <>
       <nav className={classes.nav}>
@@ -150,10 +156,12 @@ const Home = (props) => {
               logout
             </Button>
           </div>
-          <div className={classes.badge}>
-            Your profile is incomplete{" "}
-            <NavLink to="/profile">Complete Now</NavLink>
-          </div>
+          {!isEmailVerified && (
+            <div className={classes.badge}>
+              Your profile is incomplete{" "}
+              <NavLink to="/profile">Complete Now</NavLink>
+            </div>
+          )}
         </div>
       </nav>
       <AddExpenseForm
