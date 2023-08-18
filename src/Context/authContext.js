@@ -34,7 +34,7 @@ export const AuthContextProvider = (props) => {
     };
     EmailVerifyHandler();
   }, [email]);
-  console.log("ver", verify);
+  //console.log("ver", verify);
 
   const userIsLoggedin = !!token;
   const loginHandler = (token, email) => {
