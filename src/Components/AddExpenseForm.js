@@ -12,16 +12,22 @@ import {
   TextField,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./AddExpenseForm.module.css";
-import AuthContext from "../Context/authContext";
+import { useDispatch, useSelector } from "react-redux";
+import { premiumAction } from "../Store/premium";
+
+//import AuthContext from "../Context/authContext";
 
 const AddExpenseForm = (props) => {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [Category, setCategory] = useState("");
   const [date, setDate] = useState("");
-  const { email } = useContext(AuthContext);
+  //const { email } = useContext(AuthContext);
+  const email = useSelector((state) => state.auth.email);
+  const premium = useSelector((state) => state.premium.isPremium);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (props.editExpense) {
       setPrice(props.editExpense.price.toString());
@@ -76,6 +82,10 @@ const AddExpenseForm = (props) => {
         alert(error.message);
       }
     } else {
+      if (price >= 10000) {
+        dispatch(premiumAction.premium());
+        return;
+      }
       if (
         price.trim === "" ||
         description.trim === "" ||
@@ -188,9 +198,12 @@ const AddExpenseForm = (props) => {
                 variant="standard"
               />
             </FormControl>
-            <Button type="submit" variant="outlined" endIcon={<SendIcon />}>
-              Submit
-            </Button>
+            {price < 10000 && !premium && (
+              <Button type="submit" variant="outlined" endIcon={<SendIcon />}>
+                Submit
+              </Button>
+            )}
+            {price >= 10000 && <Button variant="outlined">Add Premium</Button>}
           </Box>
         </form>
       </Paper>

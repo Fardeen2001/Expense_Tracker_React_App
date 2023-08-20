@@ -1,19 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import classes from "./Home.module.css";
 import { Button } from "@mui/material";
-import AuthContext from "../Context/authContext";
+//import AuthContext from "../Context/authContext";
 import AddExpenseForm from "./AddExpenseForm";
 import ExpenseTrackerList from "./ExpenseTrackerList";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../Store/auth";
+import { setEmailVerified } from "../Store/emailSlice";
 
 const Home = (props) => {
-  const { email, logout, token, isEmailVerified } = useContext(AuthContext);
+  //const { email, logout, token, isEmailVerified } = useContext(AuthContext);
+  const email = useSelector((state) => state.auth.email);
+  const token = useSelector((state) => state.auth.token);
+  const emailVerified = useSelector((state) => state.email.isEmailVerified);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [addExpense, setAddexpense] = useState([]);
   const [editingExpense, setEditingExpense] = useState(null);
   const logoutHandler = (e) => {
     e.preventDefault();
-    logout();
+    dispatch(authActions.logout());
+    // logout();
     navigate("/auth", { replace: true });
   };
   const verifyHandler = async (e) => {
@@ -55,6 +63,8 @@ const Home = (props) => {
         throw new Error("invalid");
       }
       const dt = await res.json();
+      dispatch(setEmailVerified.setEmailVerified(true));
+      localStorage.setItem("emaliIsVerified", true);
       console.log("dt", dt);
     } catch (error) {
       alert(error.message);
@@ -138,7 +148,7 @@ const Home = (props) => {
       <nav className={classes.nav}>
         <div>
           <h4>Welcome To Expense Tracker</h4>
-          {!isEmailVerified && (
+          {!emailVerified && (
             <div>
               <Button variant="outlined" onClick={verifyHandler}>
                 Verify Your Email
@@ -156,7 +166,8 @@ const Home = (props) => {
               logout
             </Button>
           </div>
-          {!isEmailVerified && (
+
+          {!emailVerified && (
             <div className={classes.badge}>
               Your profile is incomplete{" "}
               <NavLink to="/profile">Complete Now</NavLink>

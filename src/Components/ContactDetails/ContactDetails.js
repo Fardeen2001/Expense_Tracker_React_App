@@ -2,11 +2,14 @@ import { AccountCircle } from "@mui/icons-material";
 import { Box, Button, FormControl, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import classes from "./ContactDetails.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ContactDetails = () => {
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
+  const navigate = useNavigate();
+  const email = useSelector((state) => state.auth.email);
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -33,8 +36,9 @@ const ContactDetails = () => {
         alert(error.message);
       }
       try {
+        const editedEmail = email.replace(/[@.]/g, "");
         const response = await fetch(
-          "https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData.json"
+          `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData${editedEmail}.json`
         );
 
         if (!response.ok) {
@@ -44,7 +48,7 @@ const ContactDetails = () => {
       } catch (error) {}
     };
     getUser();
-  }, []);
+  }, [email]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -73,8 +77,9 @@ const ContactDetails = () => {
       alert(error.message);
     }
     try {
+      const editedEmail = email.replace(/[@.]/g, "");
       const response = fetch(
-        "https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData.json",
+        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData${editedEmail}.json`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -102,7 +107,13 @@ const ContactDetails = () => {
       <div className={classes.contact}>
         <div className={classes.header}>
           <h2>Contact Details</h2>
-          <Button variant="outlined" color="error">
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
             Cancel
           </Button>
         </div>

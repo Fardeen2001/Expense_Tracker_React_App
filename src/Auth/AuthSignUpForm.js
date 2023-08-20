@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import classes from "./AuthSignupForm.module.css";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
@@ -11,7 +11,9 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { AddCircleOutlineOutlined } from "@mui/icons-material";
 import { Avatar, Button, Grid, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../Context/authContext";
+//import AuthContext from "../Context/authContext";
+import { useDispatch } from "react-redux";
+import { authActions } from "../Store/auth";
 
 const AuthSignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +23,9 @@ const AuthSignUpForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const authCxt = useContext(AuthContext);
+  //const authCxt = useContext(AuthContext);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -66,8 +70,9 @@ const AuthSignUpForm = () => {
       }
       const data = await response.json();
       setIsLoading(false);
+      dispatch(authActions.login({ token: data.idToken, email: data.email }));
       //console.log(data);
-      authCxt.login(data.idToken, email);
+      // authCxt.login(data.idToken, email);
       navigate("/", { replace: true });
       //   console.log(data.idToken);
       //   authCxt.login(data.idToken, emailInput.current.value);
