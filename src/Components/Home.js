@@ -9,15 +9,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../Store/auth";
 import { setEmailVerified } from "../Store/emailSlice";
 
+import SwitchModes from "./UI/Switch";
+import { premiumAction } from "../Store/premium";
+
 const Home = (props) => {
   //const { email, logout, token, isEmailVerified } = useContext(AuthContext);
   const email = useSelector((state) => state.auth.email);
   const token = useSelector((state) => state.auth.token);
   const emailVerified = useSelector((state) => state.email.isEmailVerified);
+  const premium = useSelector((state) => state.premium.isPremium);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [addExpense, setAddexpense] = useState([]);
   const [editingExpense, setEditingExpense] = useState(null);
+  const premiumUser = useSelector((state) => state.premium.premiumUser);
+  const mode = useSelector((state) => state.darkMode.mode);
+  const premiumClickHandler = (e) => {
+    e.preventDefault();
+    dispatch(premiumAction.premiumUser(true));
+  };
   const logoutHandler = (e) => {
     e.preventDefault();
     dispatch(authActions.logout());
@@ -145,7 +155,7 @@ const Home = (props) => {
 
   return (
     <>
-      <nav className={classes.nav}>
+      <nav className={mode ? classes.navDark : classes.navLight}>
         <div>
           <h4>Welcome To Expense Tracker</h4>
           {!emailVerified && (
@@ -157,9 +167,20 @@ const Home = (props) => {
           )}
         </div>
         <div className={classes.side}>
+          {premium && !premiumUser && (
+            <Button
+              variant="outlined"
+              color={mode ? "secondary" : "primary"}
+              onClick={premiumClickHandler}
+            >
+              Add premium
+            </Button>
+          )}
+          {premiumUser && <SwitchModes />}
           <div>
             <Button
               variant="outlined"
+              color={mode ? "secondary" : "primary"}
               className={classes.logout}
               onClick={logoutHandler}
             >

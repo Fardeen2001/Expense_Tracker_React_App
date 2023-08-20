@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 
 function App() {
   // const authCxt = useContext(AuthContext);
+  //const mode = useSelector((state) => state.darkMode.mode);
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
   return (
     <BrowserRouter>

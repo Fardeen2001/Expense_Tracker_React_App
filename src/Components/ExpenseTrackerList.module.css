@@ -8,11 +8,28 @@
   place-items: start;
   padding: 20px;
 }
+.paperDark {
+  display: grid;
+  place-items: start;
+  padding: 20px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.593) !important ;
+}
 .list {
   width: 100%;
 }
+
 .listitems {
   border-bottom: 2px solid black;
+}
+.listitemsDark {
+  border-bottom: 2px solid rgb(255, 255, 255) !important;
+}
+.iconsDark {
+  color: white !important;
+}
+.textDark {
+  color: white !important;
 }
 @media screen and (max-width: 678px) {
   .grid {

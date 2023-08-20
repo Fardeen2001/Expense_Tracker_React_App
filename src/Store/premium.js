@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const intialPremiumState = {
   isPremium: false,
+  premiumUser: false,
 };
 const premiumSlice = createSlice({
   name: "premium",
@@ -8,6 +9,9 @@ const premiumSlice = createSlice({
   reducers: {
     premium(state, action) {
       state.isPremium = true;
+    },
+    premiumUser(state, action) {
+      state.premiumUser = true;
     },
   },
 });

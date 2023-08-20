@@ -27,6 +27,8 @@ const AddExpenseForm = (props) => {
   //const { email } = useContext(AuthContext);
   const email = useSelector((state) => state.auth.email);
   const premium = useSelector((state) => state.premium.isPremium);
+  const premiumUser = useSelector((state) => state.premium.premiumUser);
+  const mode = useSelector((state) => state.darkMode.mode);
   const dispatch = useDispatch();
   useEffect(() => {
     if (props.editExpense) {
@@ -82,7 +84,7 @@ const AddExpenseForm = (props) => {
         alert(error.message);
       }
     } else {
-      if (price >= 10000) {
+      if (price >= 10000 && !premiumUser) {
         dispatch(premiumAction.premium());
         return;
       }
@@ -136,21 +138,36 @@ const AddExpenseForm = (props) => {
 
   return (
     <Grid className={classes.grid}>
-      <Paper elevation={20} className={classes.paper}>
+      <Paper
+        elevation={20}
+        className={mode ? classes.paperDark : classes.paper}
+      >
         <h1 className={classes.header}>ADD YOUR EXPENSES HERE</h1>
         <form onSubmit={submitHandler}>
-          <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          <Box
+            sx={{ display: "flex", flexWrap: "wrap" }}
+            className={mode ? classes.textDark : ""}
+          >
             <FormControl fullWidth required sx={{ m: 1 }} variant="standard">
-              <InputLabel htmlFor="standard-adornment-amount">
+              <InputLabel
+                htmlFor="standard-adornment-amount"
+                className={mode ? classes.textDark : ""}
+              >
                 Amount
               </InputLabel>
               <Input
                 value={price}
+                className={mode ? classes.textDark : ""}
                 onChange={priceHandleChange}
                 id="standard-adornment-amount"
                 type="number"
                 startAdornment={
-                  <InputAdornment position="start">Rs</InputAdornment>
+                  <InputAdornment
+                    position="start"
+                    className={mode ? classes.textDark : ""}
+                  >
+                    Rs
+                  </InputAdornment>
                 }
               />
             </FormControl>
@@ -162,6 +179,7 @@ const AddExpenseForm = (props) => {
                 id="outlined-required text"
                 label="Description"
                 variant="standard"
+                className={mode ? classes.textDark : ""}
                 fullWidth
               />
             </FormControl>
@@ -172,6 +190,7 @@ const AddExpenseForm = (props) => {
               <Select
                 labelId="demo-simple-select-standard-label"
                 id="demo-simple-select-standard"
+                className={mode ? classes.textDark : ""}
                 value={Category}
                 onChange={categoryHandleChange}
                 label="Category"
@@ -196,14 +215,17 @@ const AddExpenseForm = (props) => {
                   shrink: true,
                 }}
                 variant="standard"
+                className={mode ? classes.textDark : ""}
               />
             </FormControl>
-            {price < 10000 && !premium && (
-              <Button type="submit" variant="outlined" endIcon={<SendIcon />}>
-                Submit
-              </Button>
-            )}
-            {price >= 10000 && <Button variant="outlined">Add Premium</Button>}
+            <Button
+              type="submit"
+              variant="outlined"
+              endIcon={<SendIcon />}
+              disabled={premium && !premiumUser}
+            >
+              Submit
+            </Button>
           </Box>
         </form>
       </Paper>
