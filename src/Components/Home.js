@@ -228,7 +228,7 @@ const Home = (props) => {
         onUpdate={updateExpenseHandler}
       />
       {!addExpense.length > 0 && (
-        <h3 style={{ textAlign: "center", marginTop: "15%" }}>
+        <h3 style={{ textAlign: "center", marginTop: "20%" }}>
           Nothing, Please Add Something!
         </h3>
       )}
