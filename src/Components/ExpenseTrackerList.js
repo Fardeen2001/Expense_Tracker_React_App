@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Grid,
   IconButton,
   List,
@@ -26,12 +27,33 @@ const CategoryIcons = {
 };
 const ExpenseTrackerList = (props) => {
   const mode = useSelector((state) => state.darkMode.mode);
+  const premiumUser = useSelector((state) => state.premium.premiumUser);
+  const makeCSV = (rows) => {
+    const CSVContent = rows.map((item) => {
+      return ` ${item.date},${item.category},${item.price},${item.description}`;
+    });
+    CSVContent.unshift("Date,Name,Price,Description");
+    return CSVContent.join("\n");
+  };
+  const blob = new Blob([makeCSV(props.addExpense)]);
   return (
     <Grid className={classes.grid}>
       <Paper
         elevation={20}
         className={mode ? classes.paperDark : classes.paper}
       >
+        {premiumUser && (
+          <Button>
+            <a
+              id="download"
+              href={URL.createObjectURL(blob)}
+              download="expensesFile.csv"
+              style={{ textDecoration: "none" }}
+            >
+              Download Expenses
+            </a>{" "}
+          </Button>
+        )}
         <List className={classes.list}>
           {props.addExpense.map((item) => (
             <ListItem

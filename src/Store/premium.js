@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const intialPremiumState = {
-  isPremium: false,
-  premiumUser: false,
+  isPremium: localStorage.getItem("premiumUser") || false,
+  premiumUser: localStorage.getItem("premiumUser") || false,
 };
 const premiumSlice = createSlice({
   name: "premium",

@@ -24,9 +24,35 @@ const Home = (props) => {
   const [editingExpense, setEditingExpense] = useState(null);
   const premiumUser = useSelector((state) => state.premium.premiumUser);
   const mode = useSelector((state) => state.darkMode.mode);
-  const premiumClickHandler = (e) => {
+  const premiumClickHandler = async (e) => {
     e.preventDefault();
-    dispatch(premiumAction.premiumUser(true));
+
+    try {
+      dispatch(premiumAction.premiumUser(true));
+      const editedEmail = email.replace(/[@.]/g, "");
+      const res = await fetch(
+        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/PremiumUser${editedEmail}.json`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            msg: "Premium User",
+            id: `${Math.random() * 10}`,
+            idToken: token,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!res.ok) {
+        throw new Error("not premium user");
+      }
+      if (res.ok) {
+        dispatch(premiumAction.premiumUser(true));
+        localStorage.setItem("premiumUser", true);
+      }
+      await res.json();
+    } catch (error) {}
   };
   const logoutHandler = (e) => {
     e.preventDefault();
