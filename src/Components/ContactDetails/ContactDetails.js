@@ -44,7 +44,9 @@ const ContactDetails = () => {
         if (!response.ok) {
           throw new Error("Something went wrong ....Retrying");
         }
-        await response.json();
+        const data = await response.json();
+        setName(data.users[0].displayName);
+        setUrl(data.users[0].photoUrl);
       } catch (error) {}
     };
     getUser();
@@ -81,7 +83,7 @@ const ContactDetails = () => {
       const response = fetch(
         `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData${editedEmail}.json`,
         {
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify({
             displayName: name,
             photoUrl: url,

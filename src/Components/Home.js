@@ -85,7 +85,7 @@ const Home = (props) => {
       const res = await fetch(
         `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified${editedEmail}.json`,
         {
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify({
             email: data.email,
             kind: data.kind,
@@ -228,7 +228,7 @@ const Home = (props) => {
         onUpdate={updateExpenseHandler}
       />
       {!addExpense.length > 0 && (
-        <h3 style={{ textAlign: "center", marginTop: "20%" }}>
+        <h3 style={{ textAlign: "center", marginTop: "25%" }}>
           Nothing, Please Add Something!
         </h3>
       )}
