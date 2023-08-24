@@ -184,7 +184,10 @@ const AddExpenseForm = (props) => {
               />
             </FormControl>
             <FormControl fullWidth required variant="standard" sx={{ m: 1 }}>
-              <InputLabel id="demo-simple-select-standard-label">
+              <InputLabel
+                id="demo-simple-select-standard-label"
+                data-testid="category-label"
+              >
                 Category
               </InputLabel>
               <Select
