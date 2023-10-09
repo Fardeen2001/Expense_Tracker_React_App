@@ -46,11 +46,9 @@ const AuthSignUpForm = () => {
     let url;
 
     if (isLogin) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E";
+      url = process.env.REACT_APP_SIGNIN;
     } else {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E";
+      url = process.env.REACT_APP_SIGNUP;
     }
 
     try {

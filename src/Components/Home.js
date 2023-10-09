@@ -31,7 +31,7 @@ const Home = (props) => {
       dispatch(premiumAction.premiumUser(true));
       const editedEmail = email.replace(/[@.]/g, "");
       const res = await fetch(
-        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/PremiumUser${editedEmail}.json`,
+        `${process.env.REACT_APP_DATABASEID}PremiumUser${editedEmail}.json`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -63,19 +63,16 @@ const Home = (props) => {
   const verifyHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            requestType: "VERIFY_EMAIL",
-            idToken: token,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(process.env.REACT_APP_VERIFY, {
+        method: "POST",
+        body: JSON.stringify({
+          requestType: "VERIFY_EMAIL",
+          idToken: token,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) {
         throw new Error("invalid");
       }
@@ -83,7 +80,7 @@ const Home = (props) => {
 
       const editedEmail = email.replace(/[@.]/g, "");
       const res = await fetch(
-        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified${editedEmail}.json`,
+        `${process.env.REACT_APP_DATABASEID}userVerified${editedEmail}.json`,
         {
           method: "PUT",
           body: JSON.stringify({
@@ -111,7 +108,7 @@ const Home = (props) => {
     try {
       const editedEmail = email.replace(/[@.]/g, "");
       const res = await fetch(
-        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}.json`
+        `${process.env.REACT_APP_DATABASEID}userExpenseData${editedEmail}.json`
       );
       if (!res.ok) {
         throw new Error("invalid");
@@ -143,7 +140,7 @@ const Home = (props) => {
     try {
       const editedEmail = email.replace(/[@.]/g, "");
       const res = await fetch(
-        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}/${firebaseId}.json`,
+        `${process.env.REACT_APP_DATABASEID}userExpenseData${editedEmail}/${firebaseId}.json`,
         {
           method: "DELETE",
         }

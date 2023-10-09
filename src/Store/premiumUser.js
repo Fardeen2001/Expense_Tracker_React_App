@@ -10,7 +10,7 @@ const PremiumUser = () => {
     try {
       const editedEmail = email.replace(/[@.]/g, "");
       const res = await fetch(
-        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/PremiumUser${editedEmail}.json`
+        `${process.env.REACT_APP_DATABASEID}PremiumUser${editedEmail}.json`
       );
       if (!res.ok) {
         throw new Error("error");

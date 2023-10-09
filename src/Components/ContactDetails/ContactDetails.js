@@ -13,18 +13,15 @@ const ContactDetails = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch(
-          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E",
-          {
-            method: "POST",
-            body: JSON.stringify({
-              idToken: localStorage.getItem("idtoken"),
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const res = await fetch(process.env.REACT_APP_PROFILE, {
+          method: "POST",
+          body: JSON.stringify({
+            idToken: localStorage.getItem("idtoken"),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         if (!res.ok) {
           throw new Error("error");
         }
@@ -38,7 +35,7 @@ const ContactDetails = () => {
       try {
         const editedEmail = email.replace(/[@.]/g, "");
         const response = await fetch(
-          `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData${editedEmail}.json`
+          `${process.env.REACT_APP_DATABASEID}userData${editedEmail}.json`
         );
 
         if (!response.ok) {
@@ -55,21 +52,18 @@ const ContactDetails = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDSc40lXY98ukYYL93R9ZxaIMQ1m5OfS-E",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            idToken: localStorage.getItem("idtoken"),
-            displayName: name,
-            photoUrl: url,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(process.env.REACT_APP_PROFILE, {
+        method: "POST",
+        body: JSON.stringify({
+          idToken: localStorage.getItem("idtoken"),
+          displayName: name,
+          photoUrl: url,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (!res.ok) {
         throw new Error("error");
       }
@@ -81,7 +75,7 @@ const ContactDetails = () => {
     try {
       const editedEmail = email.replace(/[@.]/g, "");
       const response = fetch(
-        `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userData${editedEmail}.json`,
+        `${process.env.REACT_APP_DATABASEID}userData${editedEmail}.json`,
         {
           method: "PUT",
           body: JSON.stringify({

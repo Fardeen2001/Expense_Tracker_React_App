@@ -16,7 +16,7 @@ const EmailVerification = () => {
 
         const editedEmail = email.replace(/[@.]/g, "");
         const res = await fetch(
-          `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userVerified${editedEmail}.json`
+          `${process.env.REACT_APP_DATABASEID}userVerified${editedEmail}.json`
         );
         if (!res.ok) {
           throw new Error("Email is not verified");

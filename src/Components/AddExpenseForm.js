@@ -65,7 +65,7 @@ const AddExpenseForm = (props) => {
       try {
         const editedEmail = email.replace(/[@.]/g, "");
         const response = await fetch(
-          `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}/${props.editExpense.firebaseId}.json`,
+          `${process.env.REACT_APP_DATABASEID}userExpenseData${editedEmail}/${props.editExpense.firebaseId}.json`,
           {
             method: "PUT",
             body: JSON.stringify(updatedExpense),
@@ -108,7 +108,7 @@ const AddExpenseForm = (props) => {
       try {
         const editedEmail = email.replace(/[@.]/g, "");
         const res = await fetch(
-          `https://expense-tracker-fardeen-default-rtdb.asia-southeast1.firebasedatabase.app/userExpenseData${editedEmail}.json`,
+          `${process.env.REACT_APP_DATABASEID}userExpenseData${editedEmail}.json`,
           {
             method: "POST",
             body: JSON.stringify({
